@@ -1,0 +1,4 @@
+cloudshell-automation-api>=9.2
+cloudshell-calix
+cloudshell-shell-networking-standard==5.0.4
+cloudshell-shell-core>=5.0,<6.0
