@@ -1,24 +1,23 @@
-#!/usr/bin/python
-# -*- coding: utf-8 -*-
-
-import datetime
-import json
-
+from cloudshell.shell.core.driver_context import (
+    AutoLoadCommandContext,
+    AutoLoadDetails,
+    InitCommandContext,
+    ResourceCommandContext,
+)
+from cloudshell.shell.core.driver_utils import GlobalLock
 from cloudshell.shell.core.orchestration_save_restore import OrchestrationSaveRestore
+from cloudshell.shell.core.resource_driver_interface import ResourceDriverInterface
 from cloudshell.shell.core.session.cloudshell_session import CloudShellSessionContext
+from cloudshell.shell.core.session.logging_session import LoggingSessionContext
+from cloudshell.shell.standards.networking.autoload_model import NetworkingResourceModel
+from cloudshell.shell.standards.networking.driver_interface import (
+    NetworkingResourceDriverInterface,
+)
+from cloudshell.shell.standards.networking.resource_config import (
+    NetworkingResourceConfig,
+)
 
 from cloudshell.calix.cli.calix_cli_handler import CalixCli
-from cloudshell.shell.core.driver_context import InitCommandContext, ResourceCommandContext, AutoLoadDetails, \
-    AutoLoadCommandContext
-from cloudshell.shell.core.driver_utils import GlobalLock
-from cloudshell.shell.core.resource_driver_interface import ResourceDriverInterface
-from cloudshell.shell.core.session.logging_session import LoggingSessionContext
-from cloudshell.shell.flows.state.basic_flow import StateFlow
-from cloudshell.shell.standards.networking.autoload_model import NetworkingResourceModel
-
-from cloudshell.shell.standards.networking.driver_interface import NetworkingResourceDriverInterface
-from cloudshell.shell.standards.networking.resource_config import NetworkingResourceConfig
-
 from cloudshell.calix.flows.calix_autoload_flow import (
     CalixSnmpAutoloadFlow as AutoloadFlow,
 )
@@ -28,12 +27,8 @@ from cloudshell.calix.flows.calix_configuration_flow import (
 from cloudshell.calix.flows.calix_run_command_flow import (
     CalixCommandFlow as CommandFlow,
 )
-from cloudshell.calix.flows.calix_state_flow import (
-    CalixStateFlow as StateFlow,
-)
-from cloudshell.calix.snmp.calix_snmp_handler import (
-    CalixSnmpHandler as SNMPHandler,
-)
+from cloudshell.calix.flows.calix_state_flow import CalixStateFlow as StateFlow
+from cloudshell.calix.snmp.calix_snmp_handler import CalixSnmpHandler as SNMPHandler
 
 
 class CalixDriver(
@@ -49,6 +44,7 @@ class CalixDriver(
 
     def initialize(self, context: InitCommandContext) -> str:
         """Initialize method.
+
         :param context: an object with all Resource Attributes inside
         """
         resource_config = NetworkingResourceConfig.from_context(
@@ -60,6 +56,7 @@ class CalixDriver(
 
     def health_check(self, context: ResourceCommandContext):
         """Performs device health check.
+
         :param context: an object with all Resource Attributes inside
         :return: Success or Error message
         """
@@ -85,6 +82,7 @@ class CalixDriver(
     @GlobalLock.lock
     def get_inventory(self, context: AutoLoadCommandContext) -> AutoLoadDetails:
         """Return device structure with all standard attributes.
+
         :param context: an object with all Resource Attributes inside
         :return: response
         """
@@ -118,6 +116,7 @@ class CalixDriver(
         self, context: ResourceCommandContext, request: str
     ) -> str:
         """Create vlan and add or remove it to/from network interface.
+
         :param context: an object with all Resource Attributes inside
         :param str request: request json
         :return:
@@ -128,6 +127,7 @@ class CalixDriver(
         self, context: ResourceCommandContext, custom_command: str
     ) -> str:
         """Send custom command.
+
         :param custom_command: Command user wants to send to the device.
         :param context: an object with all Resource Attributes inside
         :return: result
@@ -157,6 +157,7 @@ class CalixDriver(
         self, context: ResourceCommandContext, custom_command: str
     ) -> str:
         """Send custom command in configuration mode.
+
         :param custom_command: Command user wants to send to the device
         :param context: an object with all Resource Attributes inside
         :return: result
@@ -190,6 +191,7 @@ class CalixDriver(
         vrf_management_name: str,
     ) -> str:
         """Save selected file to the provided destination.
+
         :param context: an object with all Resource Attributes inside
         :param configuration_type: source file, which will be saved
         :param folder_path: destination path where file will be saved
@@ -235,6 +237,7 @@ class CalixDriver(
         vrf_management_name: str,
     ):
         """Restore selected file to the provided destination.
+
         :param context: an object with all Resource Attributes inside
         :param path: source config file
         :param configuration_type: running or startup configs
@@ -278,6 +281,7 @@ class CalixDriver(
         self, context: ResourceCommandContext, path: str, vrf_management_name: str
     ):
         """Upload and updates firmware on the resource.
+
         :param context: an object with all Resource Attributes inside
         :param path: full path to firmware file, i.e. tftp://10.10.10.1/firmware.tar
         :param vrf_management_name: VRF management Name
@@ -288,6 +292,7 @@ class CalixDriver(
         self, context: ResourceCommandContext, mode: str, custom_params: str
     ) -> str:
         """Save selected file to the provided destination.
+
         :param context: an object with all Resource Attributes inside
         :param mode: mode
         :param custom_params: json with custom save parameters
@@ -328,6 +333,7 @@ class CalixDriver(
         custom_params: str,
     ):
         """Restore selected file to the provided destination.
+
         :param context: an object with all Resource Attributes inside
         :param saved_artifact_info: OrchestrationSavedArtifactInfo json
         :param custom_params: json with custom restore parameters
@@ -360,6 +366,7 @@ class CalixDriver(
 
     def cleanup(self):
         """Destroy the driver session.
+
         This function is called everytime a driver instance is destroyed.
         This is a good place to close any open sessions, finish writing to log files
         """
