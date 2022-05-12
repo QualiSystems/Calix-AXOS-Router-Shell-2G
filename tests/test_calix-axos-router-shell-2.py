@@ -1,17 +1,9 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
-"""
-Tests for `CalixAxosRouterShell2Driver`
-"""
+"""Tests for `CalixAxosRouterShell2Driver`."""
 
 import unittest
 
-from driver import CalixAxosRouterShell2Driver
-
 
 class TestCalixAxosRouterShell2Driver(unittest.TestCase):
-
     def setUp(self):
         pass
 
@@ -22,6 +14,7 @@ class TestCalixAxosRouterShell2Driver(unittest.TestCase):
         pass
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     import sys
+
     sys.exit(unittest.main())
