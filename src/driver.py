@@ -22,24 +22,23 @@ from cloudshell.shell.standards.networking.resource_config import (
     NetworkingResourceConfig,
 )
 from cloudshell.snmp.snmp_configurator import EnableDisableSnmpConfigurator
+
 from cloudshell.calix.cli.calix_cli_configurator import CalixCliConfigurator
 from cloudshell.calix.flows.calix_autoload_flow import CalixSnmpAutoloadFlow
 from cloudshell.calix.flows.calix_configuration_flow import CalixConfigurationFlow
 from cloudshell.calix.flows.calix_enable_disable_snmp_flow import (
-    CalixEnableDisableSnmpFlow
+    CalixEnableDisableSnmpFlow,
 )
 from cloudshell.calix.flows.calix_state_flow import CalixStateFlow
 
 
-class CalixDriver(
-    ResourceDriverInterface, NetworkingResourceDriverInterface
-):
+class CalixDriver(ResourceDriverInterface, NetworkingResourceDriverInterface):
     SUPPORTED_OS = [r"Calix"]
     SHELL_NAME = "Calix AXOS Router 2G"
     SESSION_POOL_TIMEOUT = 300
 
     def __init__(self):
-        super(CalixDriver, self).__init__()
+        super().__init__()
         self._cli = None
 
     def initialize(self, context: InitCommandContext):
@@ -76,8 +75,7 @@ class CalixDriver(
                 resource_config, logger, self._cli
             )
             enable_disable_snmp_flow = CalixEnableDisableSnmpFlow(
-                cli_configurator,
-                resource_config.vrf_management_name
+                cli_configurator, resource_config.vrf_management_name
             )
             snmp_configurator = EnableDisableSnmpConfigurator.from_config(
                 enable_disable_snmp_flow, resource_config, logger
@@ -94,13 +92,13 @@ class CalixDriver(
             return response
 
     def ApplyConnectivityChanges(
-            self, context: ResourceCommandContext, request: str
+        self, context: ResourceCommandContext, request: str
     ) -> str:
         """Create vlan and add or remove it to/from network interface."""
         pass
 
     def run_custom_command(
-            self, context: ResourceCommandContext, custom_command: str
+        self, context: ResourceCommandContext, custom_command: str
     ) -> str:
         """Send custom command."""
         with LoggingSessionContext(context) as logger:
@@ -116,7 +114,7 @@ class CalixDriver(
             return response
 
     def run_custom_config_command(
-            self, context: ResourceCommandContext, custom_command: str
+        self, context: ResourceCommandContext, custom_command: str
     ) -> str:
         """Send custom command in configuration mode."""
         with LoggingSessionContext(context) as logger:
@@ -134,11 +132,11 @@ class CalixDriver(
             return result_str
 
     def save(
-            self,
-            context: ResourceCommandContext,
-            folder_path: str,
-            configuration_type: str,
-            vrf_management_name: str,
+        self,
+        context: ResourceCommandContext,
+        folder_path: str,
+        configuration_type: str,
+        vrf_management_name: str,
     ) -> str:
         """Save selected file to the provided destination.
 
@@ -176,12 +174,12 @@ class CalixDriver(
 
     @GlobalLock.lock
     def restore(
-            self,
-            context: ResourceCommandContext,
-            path: str,
-            configuration_type: str,
-            restore_method: str,
-            vrf_management_name: str,
+        self,
+        context: ResourceCommandContext,
+        path: str,
+        configuration_type: str,
+        restore_method: str,
+        vrf_management_name: str,
     ):
         """Restore selected file to the provided destination.
 
@@ -222,7 +220,7 @@ class CalixDriver(
 
     @GlobalLock.lock
     def load_firmware(
-            self, context: ResourceCommandContext, path: str, vrf_management_name: str
+        self, context: ResourceCommandContext, path: str, vrf_management_name: str
     ):
         """Upload and updates firmware on the resource.
 
@@ -233,7 +231,7 @@ class CalixDriver(
         pass
 
     def orchestration_save(
-            self, context: ResourceCommandContext, mode: str, custom_params: str
+        self, context: ResourceCommandContext, mode: str, custom_params: str
     ) -> str:
         """Save selected file to the provided destination.
 
@@ -268,10 +266,10 @@ class CalixDriver(
             return response_json
 
     def orchestration_restore(
-            self,
-            context: ResourceCommandContext,
-            saved_artifact_info: str,
-            custom_params: str,
+        self,
+        context: ResourceCommandContext,
+        saved_artifact_info: str,
+        custom_params: str,
     ):
         """Restore selected file to the provided destination.
 
